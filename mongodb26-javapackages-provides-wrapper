@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export PYTHONPATH="/opt/rh/maven30/root/usr/lib/python2.6/site-packages${PYTHONPATH:+:}${PYTHONPATH:-}"
+
+while read filepath
+do
+  if [[ "$filepath" == *maven-fragments/* ]]; then
+     echo "$filepath" | /opt/rh/maven30/root/usr/lib/rpm/maven.prov
+  fi
+done < "${1:-/proc/${$}/fd/0}"

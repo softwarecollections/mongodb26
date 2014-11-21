@@ -1,0 +1,6 @@
+# macro to invoke the javapackages provides and requires generators on el6
+%mongodb26_find_provides_and_requires %{expand: \
+%global _use_internal_dependency_generator 0
+%global __find_provides %{_rpmconfigdir}/mongodb26-javapackages-provides-wrapper
+%global __find_requires %{_rpmconfigdir}/mongodb26-javapackages-requires-wrapper
+}
