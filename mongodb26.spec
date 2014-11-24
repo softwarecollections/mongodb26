@@ -12,7 +12,7 @@
 Summary:	Package that installs %scl
 Name:		%scl_name
 Version:	2.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 Source0:	macros.mongodb26
@@ -277,6 +277,8 @@ restorecon /etc/rc.d/init.d/%{scl_prefix}mongod >/dev/null 2>&1 || :
 %config(noreplace) %{_sysconfdir}/xdg/xmvn/configuration.xml
 %{_mandir}/man7/%{scl_name}.*
 
+%scl_files
+
 %files build
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 %{_root_sysconfdir}/rpm/macros.%{name}
@@ -286,6 +288,9 @@ restorecon /etc/rc.d/init.d/%{scl_prefix}mongod >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Mon Nov 24 2014 Marek Skalicky <mskalic@redhat.com> 2.0-3
+- Modified files section to correctly uninstall SCL root
+
 * Tue Nov 18 2014 Marek Skalicky <mskalic@redhat.com> 2.0-2
 - Changed and cleaned up requirements
 
