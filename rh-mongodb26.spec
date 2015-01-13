@@ -15,6 +15,19 @@
 # Define SCL macros
 %{?scl_package:%scl_package %scl}
 
+# Define where to get propper SELinux context
+# and define names and locations specific for the whole collection
+%global daemon_prefix %{?scl_prefix}
+%global selinux_logdir_source %{?_root_localstatedir}/log/mongodb
+%global logfiledir %{_localstatedir}/log/mongodb
+%global selinux_dbdatadir_source %{?_root_localstatedir}/lib/mongodb
+%global dbdatadir %{_localstatedir}/lib/mongodb
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 15
+%global daemondir %{_unitdir}
+%else
+%global daemondir %{_initddir}
+%endif
+
 # needed, because we can't use Requires: %{?scl_v8_%{scl_name_base}}
 %global scl_v8 v8314
 %global scl_v8_prefix %{scl_v8}-
@@ -275,17 +288,19 @@ cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel << E
 EOF
 
 %post runtime
-# Simple copy of context from system root to DSC root.
+# Simple copy of context from system root to SCL root.
 # In case new version needs some additional rules or context definition,
 # it needs to be solved.
-semanage fcontext -a -e /var/log/mongodb /var/log/%{?scl_prefix}mongodb >/dev/null 2>&1 || :
-semanage fcontext -a -e /etc/rc.d/init.d/mongod /etc/rc.d/init.d/%{?scl_prefix}mongod >/dev/null 2>&1 || :
-semanage fcontext -a -e /etc/rc.d/init.d/mongod /etc/rc.d/init.d/%{?scl_prefix}mongos >/dev/null 2>&1 || :
 semanage fcontext -a -e / %{?_scl_root} >/dev/null 2>&1 || :
+semanage fcontext -a -e %{?_root_localstatedir}/log/mongodb %{_localstatedir}/log/mongodb >/dev/null 2>&1 || :
+semanage fcontext -a -e %{?_root_localstatedir}/lib/mongodb %{_localstatedir}/lib/mongodb >/dev/null 2>&1 || :
+semanage fcontext -a -e %{daemondir}/mongod %{daemondir}/%{?scl_prefix}mongod >/dev/null 2>&1 || :
+semanage fcontext -a -e %{daemondir}/mongos %{daemondir}/%{?scl_prefix}mongos >/dev/null 2>&1 || :
 selinuxenabled && load_policy >/dev/null 2>&1 || :
 restorecon -R %{?_scl_root} >/dev/null 2>&1 || :
-restorecon -R /var/log/%{?scl_prefix}mongodb >/dev/null 2>&1 || :
-restorecon /etc/rc.d/init.d/%{?scl_prefix}mongod >/dev/null 2>&1 || :
+restorecon -R %{_localstatedir}/log/mongodb >/dev/null 2>&1 || :
+restorecon -R %{_localstatedir}/lib/mongodb >/dev/null 2>&1 || :
+restorecon %{daemondir}/%{?scl_prefix}* >/dev/null 2>&1 || :
 
 %files
 
