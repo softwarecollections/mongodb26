@@ -28,9 +28,9 @@ Version:	2.0
 Release:	4%{?dist}
 License:	GPLv2+
 Group:		Applications/File
-Source0:	macros.mongodb26
-Source1:	mongodb26-javapackages-provides-wrapper
-Source2:	mongodb26-javapackages-requires-wrapper
+Source0:	macros.scl
+Source1:	javapackages-provides-wrapper
+Source2:	javapackages-requires-wrapper
 # template of man page with RPM macros to be expanded
 Source3:	README
 # mongodb license
